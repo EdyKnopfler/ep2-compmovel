@@ -17,8 +17,10 @@ public class Texturas {
     public static int TIJOLO1 = 1;
     public static int TIJOLO2 = 2;
     public static int TIJOLO3 = 3;
+    public static int TIJOLO4 = 4;
+    public static int PAD = 5;
 
-    private static int[] nomes = new int[4];
+    private static int[] nomes = new int[6];
 
     public static void carregar(Context contexto) {
         float[] uvs = new float[] {
@@ -43,7 +45,8 @@ public class Texturas {
         criarTextura(contexto, 1, R.drawable.tijolo1, GLES20.GL_TEXTURE1);
         criarTextura(contexto, 2, R.drawable.tijolo2, GLES20.GL_TEXTURE2);
         criarTextura(contexto, 3, R.drawable.tijolo3, GLES20.GL_TEXTURE3);
-
+        criarTextura(contexto, 4, R.drawable.tijolo4, GLES20.GL_TEXTURE4);
+        criarTextura(contexto, 5, R.drawable.pad, GLES20.GL_TEXTURE5);
     }
 
     private static void criarTextura(Context contexto, int indice, int id, int identificador) {

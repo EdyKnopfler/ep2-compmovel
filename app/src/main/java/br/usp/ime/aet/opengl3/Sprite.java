@@ -10,7 +10,8 @@ public class Sprite {
 
     protected static ShortBuffer ordemDesenho;
 
-    private float x, y, largura, altura;
+    private int id;
+    public float x, y, largura, altura;
     private int textura;
 
     // Prealocamos para melhor desempenho
@@ -18,7 +19,8 @@ public class Sprite {
     private ByteBuffer bytes;
     private FloatBuffer coordenadas;
 
-    public Sprite(float x, float y, float largura, float altura, int textura) {
+    public Sprite(int id, float x, float y, float largura, float altura, int textura) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.largura = largura;
@@ -124,4 +126,8 @@ public class Sprite {
         coordenadas.position(0);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Sprite && ((Sprite) obj).id == this.id;
+    }
 }
