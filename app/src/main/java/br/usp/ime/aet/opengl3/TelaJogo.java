@@ -4,31 +4,28 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import static br.usp.ime.aet.opengl3.Sprite.ALT_BLOCO;
+import static br.usp.ime.aet.opengl3.Sprite.LARG_BLOCO;
 
+/** Lógica de renderização */
 public class TelaJogo implements GLSurfaceView.Renderer {
-
-    private static final float LARG_BLOCO = 0.2f;
-    private static final float ALT_BLOCO = 0.1f;
 
     private Context contexto;
     private Partida partida;
-    private ArrayList<Sprite> blocos;
-    private ArrayList<Sprite> parede;
-    private Sprite bola, pad;
     private float[] camera = new float[16];
     private float[] projecao = new float[16];
     private float largura, altura;
+    private Sprite[] vidas = new Sprite[Partida.VIDAS_EXTRAS];
 
     public TelaJogo(Context contexto) {
         this.contexto = contexto;
-        this.partida = new Partida();
-        posicoesIniciais();
+        partida = new Partida();
         criarParede();
-        criarNovaFase();
+        faseAmostra();
+        criarSpritesVidas();
     }
 
     @Override
@@ -54,27 +51,26 @@ public class TelaJogo implements GLSurfaceView.Renderer {
         float[] ajuste = new float[16];
         Matrix.multiplyMM(ajuste, 0, projecao, 0, camera, 0);
 
-        for (Sprite b : blocos)
-            b.desenhar(ajuste);
-
-        for (Sprite b : parede)
-            b.desenhar(ajuste);
-
-        bola.desenhar(ajuste);
-        pad.desenhar(ajuste);
-
-        if (partida.finalizada) return;
-
-        if (!partida.rolando) {
-            posicoesIniciais();
-            partida.iniciar();
-        }
-
         partida.processar();
+
+        for (Sprite b : partida.blocos)
+            b.desenhar(ajuste);
+
+        for (Sprite b : partida.parede)
+            b.desenhar(ajuste);
+
+        partida.bola.desenhar(ajuste);
+        partida.pad.desenhar(ajuste);
+
+        desenharVidas(ajuste);
+
+        if (partida.finalizada) {
+            // TODO mostrar um splash
+        }
     }
 
     private void criarParede() {
-        parede = new ArrayList<>();
+        ArrayList<Sprite> parede = new ArrayList<>();
 
         // Esquerda e direita
         int i = 1;
@@ -91,27 +87,31 @@ public class TelaJogo implements GLSurfaceView.Renderer {
             i++;
         }
 
-        partida.setParede(parede);
+        partida.parede = parede;
     }
 
-    private void posicoesIniciais() {
-        bola = new Sprite(-1, -0.05f, -0.3f, 0.1f, 0.1f, Texturas.BOLA);
-        pad = new Sprite(-2, -0.15f, -0.8f, 0.3f, 0.05f, Texturas.PAD);
-        partida.setBola(bola);
-        partida.setPad(pad);
-    }
-
-    private void criarNovaFase() {
-        blocos = new ArrayList<>();
+    private void faseAmostra() {
+        ArrayList<Sprite> blocos = new ArrayList<>();
         blocos.add(new Sprite(1, -0.2f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO1));
         blocos.add(new Sprite(2, -0.4f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO2));
         blocos.add(new Sprite(3, -0.6f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO3));
         blocos.add(new Sprite(4, 0f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO3));
         blocos.add(new Sprite(5, 0.2f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO2));
         blocos.add(new Sprite(6, 0.4f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO1));
-        partida.setBlocos(blocos);
+        partida.blocos = blocos;
     }
 
+    private void criarSpritesVidas() {
+        for (int i = 0; i < Partida.VIDAS_EXTRAS; i++)
+            vidas[i] = new Sprite(-10 + i, -0.55f + i*0.1f, -0.9f, 0.05f, 0.05f, Texturas.BOLA);
+    }
+
+    private void desenharVidas(float[] ajuste) {
+        for (int i = 0; i < partida.vidas; i++)
+            vidas[i].desenhar(ajuste);
+    }
+
+    /*
     public static void checkGlError(String glOperation) {
         int error;
         while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
@@ -119,6 +119,7 @@ public class TelaJogo implements GLSurfaceView.Renderer {
             throw new RuntimeException(glOperation + ": glError " + error);
         }
     }
+    */
 
     public Partida getPartida() {
         return partida;
@@ -131,4 +132,5 @@ public class TelaJogo implements GLSurfaceView.Renderer {
     public float getAltura() {
         return altura;
     }
+
 }

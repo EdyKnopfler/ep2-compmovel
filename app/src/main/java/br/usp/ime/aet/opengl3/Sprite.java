@@ -6,7 +6,11 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+/** Lógica de OpenGL: desenhos */
 public class Sprite {
+
+    public static final float LARG_BLOCO = 0.2f;
+    public static final float ALT_BLOCO = 0.1f;
 
     protected static ShortBuffer ordemDesenho;
 
@@ -47,56 +51,24 @@ public class Sprite {
         int programa = Programas.SPRITE;
         GLES20.glUseProgram(programa);
 
-        // get handle to vertex shader's vPosition member
         int hPosicao = GLES20.glGetAttribLocation(programa, "vPosition");
-        TelaJogo.checkGlError("glGetAttribLocation");
-
-        // Enable generic vertex attribute array
         GLES20.glEnableVertexAttribArray(hPosicao);
-        TelaJogo.checkGlError("glEnableVertexAttribArray");
-
-        // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(hPosicao, 3, GLES20.GL_FLOAT, false, 0, coordenadas);
-        TelaJogo.checkGlError("glVertexAttribPointer");
 
-        // Get handle to texture coordinates location
         int hRecorte = GLES20.glGetAttribLocation(programa, "a_texCoord");
-        TelaJogo.checkGlError("glGetAttribLocation");
-
-        // Enable generic vertex attribute array
         GLES20.glEnableVertexAttribArray(hRecorte);
-        TelaJogo.checkGlError("glEnableVertexAttribArray");
-
-        // Prepare the texturecoordinates
         GLES20.glVertexAttribPointer(hRecorte, 2, GLES20.GL_FLOAT, false, 0, Texturas.recorte);
-        TelaJogo.checkGlError("glVertexAttribPointer");
 
-        // Get handle to shape's transformation matrix
         int hAjuste = GLES20.glGetUniformLocation(programa, "uMVPMatrix");
-        TelaJogo.checkGlError("glGetUniformLocation");
-
-        // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(hAjuste, 1, false, ajuste, 0);
-        TelaJogo.checkGlError("glUniformMatrix4fv");
 
-        // Get handle to textures locations
         int hTextura = GLES20.glGetUniformLocation (programa, "s_texture");
-        TelaJogo.checkGlError("glGetUniformLocation");
-
-        // Set the sampler texture unit to 0, where we have saved the texture.
         GLES20.glUniform1i(hTextura, textura);
-        TelaJogo.checkGlError("glUniform1i");
 
-        // Draw the triangle
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, 6, GLES20.GL_UNSIGNED_SHORT, ordemDesenho);
-        TelaJogo.checkGlError("glDrawElements");
 
-        // Disable vertex array
         GLES20.glDisableVertexAttribArray(hPosicao);
-        TelaJogo.checkGlError("glDisableVertexAttribArray");
         GLES20.glDisableVertexAttribArray(hRecorte);
-        TelaJogo.checkGlError("glDisableVertexAttribArray");
-
     }
 
     private void determinarCoordenadas() {
@@ -126,8 +98,12 @@ public class Sprite {
         coordenadas.position(0);
     }
 
+    /*
+    TODO acho que não precisamos de IDs de sprites (testar)
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Sprite && ((Sprite) obj).id == this.id;
     }
+    */
+
 }

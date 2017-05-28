@@ -2,9 +2,9 @@ package br.usp.ime.aet.opengl3;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
+/** Tela do jogo */
 public class MainActivity extends Activity {
 
     private TelaJogo tela;

@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
 
+/** Captura de toques */
 public class ToqueTela extends GLSurfaceView {
 
     private TelaJogo tela;
@@ -27,16 +28,16 @@ public class ToqueTela extends GLSurfaceView {
         switch (evento.getAction()) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
-                tela.getPartida().tocouTela(x, y);
+                tela.getPartida().tocouTela(x);
                 break;
             case MotionEvent.ACTION_MOVE:
-                tela.getPartida().moveuDedo(x, y);
+                tela.getPartida().moveuDedo(x);
                 Log.d("X", x + ", " + y);
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_CANCEL:
-                tela.getPartida().soltouDedo(x, y);
+                tela.getPartida().soltouDedo();
                 break;
         }
 

@@ -2,6 +2,7 @@ package br.usp.ime.aet.opengl3;
 
 import android.opengl.GLES20;
 
+/** Lógica de OpenGL: shaders */
 public class Programas {
 
     public static int SPRITE;
