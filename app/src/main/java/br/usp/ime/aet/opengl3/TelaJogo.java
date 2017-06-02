@@ -1,6 +1,6 @@
 package br.usp.ime.aet.opengl3;
 
-import android.content.Context;
+import android.app.Activity;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -13,14 +13,14 @@ import static br.usp.ime.aet.opengl3.Sprite.LARG_BLOCO;
 /** Lógica de renderização */
 public class TelaJogo implements GLSurfaceView.Renderer {
 
-    private Context contexto;
+    private Activity contexto;
     private Partida partida;
     private float[] camera = new float[16];
     private float[] projecao = new float[16];
     private float largura, altura;
     private Sprite[] vidas = new Sprite[Partida.VIDAS_EXTRAS];
 
-    public TelaJogo(Context contexto) {
+    public TelaJogo(Activity contexto) {
         this.contexto = contexto;
         partida = new Partida();
         criarParede();
@@ -67,6 +67,14 @@ public class TelaJogo implements GLSurfaceView.Renderer {
         if (partida.finalizada) {
             // TODO mostrar um splash
         }
+    }
+
+    public void pausar() {
+        partida.rolando = false;
+    }
+
+    public void retomar() {
+        partida.rolando = true;
     }
 
     private void criarParede() {

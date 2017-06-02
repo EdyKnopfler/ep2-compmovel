@@ -14,6 +14,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        Mensagens.setContexto(this);
+
         tela = new TelaJogo(this);
         ToqueTela sv = new ToqueTela(this);
         sv.setEGLContextClientVersion(2);
@@ -21,4 +23,15 @@ public class MainActivity extends Activity {
         setContentView(sv);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        tela.pausar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        tela.retomar();
+    }
 }

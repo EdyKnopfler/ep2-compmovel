@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import static br.usp.ime.aet.opengl3.Colisao.*;
 
 /** Lógica de OpenGL: desenhos */
 public class Sprite {

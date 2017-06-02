@@ -3,6 +3,7 @@ package br.usp.ime.aet.opengl3;
 import java.util.ArrayList;
 import static br.usp.ime.aet.opengl3.Sprite.ALT_BLOCO;
 import static br.usp.ime.aet.opengl3.Sprite.LARG_BLOCO;
+import static br.usp.ime.aet.opengl3.Colisao.*;
 
 /** Lógica de jogo */
 public class Partida {
@@ -54,33 +55,35 @@ public class Partida {
             novaPos = 0.6f - pad.largura;
         pad.x = novaPos;
 
-        // TODO testar colisões aqui
-
         if (bola.y < -0.9f) {
             vidas--;
 
             if (vidas < 0) {
-                // TODO mostrar um alerta
                 finalizada = true;
                 rolando = false;
+                Mensagens.mostrar("GAME OVER", "TESTE");
             }
             else
                 posicoesIniciais();
         }
+
+        tratarColisoes();
     }
 
     public void tocouTela(float x) {
-        if (finalizada || !rolando)
+        if (finalizada)
             iniciar();
+        else if (!rolando)
+            rolando = true;
 
         moveuDedo(x);
     }
 
     public void moveuDedo(float x) {
         if (x > pad.x + pad.largura/2f)
-            velPadX = 0.1f;
+            velPadX = 0.5f;
         else if (x < pad.x + pad.largura/2f)
-            velPadX = -0.1f;
+            velPadX = -0.5f;
         else
             velPadX = 0f;
     }
@@ -95,7 +98,7 @@ public class Partida {
         pad.x = -0.15f;
         pad.y = -0.8f;
         velBolaX = 0f;
-        velBolaY = -0.2f;
+        velBolaY = -0.7f;
     }
 
     private void criarNovaFase() {
@@ -107,6 +110,43 @@ public class Partida {
         blocos.add(new Sprite(4, 0f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO1));
         blocos.add(new Sprite(5, 0.2f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO2));
         blocos.add(new Sprite(6, 0.4f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO3));
+    }
+
+    private void tratarColisoes() {
+        Colisao colisao;
+
+        colisao = Colisao.entre(bola, pad);
+        mudaDirecao(colisao);
+
+        for (Sprite bloco : blocos) {
+            colisao = Colisao.entre(bola, bloco);
+            mudaDirecao(colisao);
+        }
+
+        for (Sprite tijolo : parede) {
+            colisao = Colisao.entre(bola, tijolo);
+            mudaDirecao(colisao);
+        }
+    }
+
+
+    public void mudaDirecao(Colisao colisao) {
+
+        // TODO este trem ainda tá com bugue
+
+        if (colisao.emX == SEM_COLISAO || colisao.emY == SEM_COLISAO) return;
+
+        if (colisao.emX == ESQUERDA)
+            velBolaX = -Math.abs(velBolaX);
+        else if (colisao.emX == DIREITA)
+            velBolaX = Math.abs(velBolaX);
+        else if (velBolaX == 0f)  // O x começa zerado
+            velBolaX = 0.7f;
+
+        if (colisao.emY == ABAIXO)
+            velBolaY = -Math.abs(velBolaY);
+        else if (colisao.emY == ACIMA)
+            velBolaY = Math.abs(velBolaY);
     }
 
 }
