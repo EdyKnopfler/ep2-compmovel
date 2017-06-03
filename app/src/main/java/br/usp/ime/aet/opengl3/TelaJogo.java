@@ -70,12 +70,11 @@ public class TelaJogo implements GLSurfaceView.Renderer {
     }
 
     public void pausar() {
-        partida.rolando = false;
+        partida.pausar();
     }
 
     public void retomar() {
-        // TODO precisa zerar a contagem de tempo
-        partida.rolando = true;
+        partida.retomar();
     }
 
     private void criarParede() {

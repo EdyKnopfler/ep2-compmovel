@@ -45,6 +45,15 @@ public class Partida {
         tempoAnterior = System.currentTimeMillis();
     }
 
+    public void pausar() {
+        rolando = false;
+    }
+
+    public void retomar() {
+        tempoAnterior = System.currentTimeMillis();
+        rolando = true;
+    }
+
     public void processar() {
         if (finalizada || !rolando) return;
 
