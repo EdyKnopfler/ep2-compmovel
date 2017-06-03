@@ -10,6 +10,12 @@ public class Partida {
 
     public static int VIDAS_EXTRAS = 3;
 
+    private static float POS_BOLA_X = -0.05f, POS_BOLA_Y = -0.3f;
+    private static float TAM_BOLA = 0.1f;
+    private static float POS_PAD_X = -0.15f, POS_PAD_Y = -0.8f;
+    private static float LARG_PAD = 0.3f, ALT_PAD = 0.05f;
+    private static float VEL_BOLA = 0.6f, VEL_PAD = 0.4f;
+
     public boolean finalizada = true;
     public boolean rolando = false;
     public int vidas = 0;
@@ -22,8 +28,8 @@ public class Partida {
     private double tempoAnterior;
 
     public Partida() {
-        bola = new Sprite(-1, -0.05f, -0.3f, 0.1f, 0.1f, Texturas.BOLA);
-        pad = new Sprite(-2, -0.15f, -0.8f, 0.3f, 0.05f, Texturas.PAD);
+        bola = new Sprite(-1, POS_BOLA_X, POS_BOLA_Y, TAM_BOLA, TAM_BOLA, Texturas.BOLA);
+        pad = new Sprite(-2, POS_PAD_X, POS_PAD_Y, LARG_PAD, ALT_PAD, Texturas.PAD);
         blocos = new ArrayList<>();
         parede = new ArrayList<>();
     }
@@ -81,9 +87,9 @@ public class Partida {
 
     public void moveuDedo(float x) {
         if (x > pad.x + pad.largura/2f)
-            velPadX = 0.5f;
+            velPadX = VEL_PAD;
         else if (x < pad.x + pad.largura/2f)
-            velPadX = -0.5f;
+            velPadX = -VEL_PAD;
         else
             velPadX = 0f;
     }
@@ -93,12 +99,12 @@ public class Partida {
     }
 
     private void posicoesIniciais() {
-        bola.x = -0.05f;
-        bola.y = -0.3f;
-        pad.x = -0.15f;
-        pad.y = -0.8f;
+        bola.x = POS_BOLA_X;
+        bola.y = POS_BOLA_Y;
+        pad.x = POS_PAD_X;
+        pad.y = POS_PAD_Y;
         velBolaX = 0f;
-        velBolaY = -0.7f;
+        velBolaY = -VEL_BOLA;
     }
 
     private void criarNovaFase() {
@@ -113,40 +119,52 @@ public class Partida {
     }
 
     private void tratarColisoes() {
-        Colisao colisao;
+        Colisao colisao = Colisao.entre(bola, pad);
 
-        colisao = Colisao.entre(bola, pad);
-        mudaDirecao(colisao);
+        if (colisao.getPosicao() != SEM_COLISAO) {
+            mudarDirecaoBola(colisao);
+            return;
+        }
+
+        Colisao maiorArea = new Colisao();  // área zerada
 
         for (Sprite bloco : blocos) {
             colisao = Colisao.entre(bola, bloco);
-            mudaDirecao(colisao);
+            if (colisao.getPosicao() != SEM_COLISAO &&
+                colisao.getAreaInterseao() > maiorArea.getAreaInterseao())
+                maiorArea = colisao;
         }
 
         for (Sprite tijolo : parede) {
             colisao = Colisao.entre(bola, tijolo);
-            mudaDirecao(colisao);
+            if (colisao.getPosicao() != SEM_COLISAO &&
+                colisao.getAreaInterseao() > maiorArea.getAreaInterseao())
+                maiorArea = colisao;
         }
+
+        if (maiorArea.getPosicao() != SEM_COLISAO)
+            mudarDirecaoBola(maiorArea);
     }
 
 
-    public void mudaDirecao(Colisao colisao) {
+    public void mudarDirecaoBola(Colisao colisao) {
+        if (velBolaX == 0f)  // O x começa zerado
+            velBolaX = VEL_BOLA;
 
-        // TODO este trem ainda tá com bugue
-
-        if (colisao.emX == SEM_COLISAO || colisao.emY == SEM_COLISAO) return;
-
-        if (colisao.emX == ESQUERDA)
-            velBolaX = -Math.abs(velBolaX);
-        else if (colisao.emX == DIREITA)
-            velBolaX = Math.abs(velBolaX);
-        else if (velBolaX == 0f)  // O x começa zerado
-            velBolaX = 0.7f;
-
-        if (colisao.emY == ABAIXO)
-            velBolaY = -Math.abs(velBolaY);
-        else if (colisao.emY == ACIMA)
-            velBolaY = Math.abs(velBolaY);
+        switch (colisao.getPosicao()) {
+            case ACIMA:
+                velBolaY = Math.abs(velBolaY);
+                break;
+            case ABAIXO:
+                velBolaY = -Math.abs(velBolaY);
+                break;
+            case ESQUERDA:
+                velBolaX = -Math.abs(velBolaX);
+                break;
+            case DIREITA:
+                velBolaX = Math.abs(velBolaX);
+                break;
+        }
     }
 
 }

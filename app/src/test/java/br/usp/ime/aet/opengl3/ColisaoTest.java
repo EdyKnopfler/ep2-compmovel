@@ -6,80 +6,50 @@ import static br.usp.ime.aet.opengl3.Colisao.*;
 
 public class ColisaoTest {
 
-    private Sprite bola = new Sprite(0, 0f, 0f, 1.0f, 1.0f, 0);
+    private Sprite bola = new Sprite(0, 0f, 0f, 0.5f, 0.5f, 0);
     private Sprite tijolo = new Sprite(1, 0f, 0f, 2.0f, 2.0f, 0);
+
     private float[][] coordenadas = new float[][] {
-            // Acima, sem tocar
-            {-2f, 2f},    // Esquerda, sem tocar
-            {-0.5f, 2f},  // Esquerda, tocando
-            {0.5f, 2f},   // Meio
-            {1.5f, 2f},   // Direita, tocando
-            {2.5f, 2f},   // Direita, sem tocar
+            // em cima, sem tocar
+            {-0.1f, 1.0f}, {1.0f, 1.0f}, {1.6f, 1.0f},
 
-            // Acima, tocando
-            {-2f, 0.5f},
-            {-0.5f, 0.5f},
-            {0.5f, 0.5f},
-            {1.5f, 0.5f},
-            {2.5f, 0.5f},
+            // em cima
+            {-0.1f, 0.4f}, {1.0f, 0.4f}, {1.6f, 0.4f},
 
-            // Meio
-            {-2f, -0.5f},
-            {-0.5f, -0.5f},
-            {0.5f, -0.5f},
-            {1.5f, -0.5f},
-            {2.5f, -0.5f},
+            // em cima, pegando mais dos lados
+            {-0.4f, 0.1f}, {1.9f, 0.1f},
 
-            // Abaixo, tocando
-            {-2f, -1.5f},
-            {-0.5f, -1.5f},
-            {0.5f, -1.5f},
-            {1.5f, -1.5f},
-            {2.5f, -1.5f},
+            // dos lados
+            {-0.4f, -0.1f}, {1.6f, -0.1f},
 
-            // Abaixo, sem tocar
-            {-2f, -2.5f},
-            {-0.5f, -2.5f},
-            {0.5f, -2.5f},
-            {1.5f, -2.5f},
-            {2.5f, -2.5f},
+            // embaixo, pegando mais dos lados
+            {-0.4f, -1.6f}, {1.9f, -1.6f},
+
+            // embaixo
+            {-0.1f, -1.9f}, {1.0f, -1.9f}, {1.6f, -1.9f},
+
+            // embaixo, sem tocar
+            {-0.1f, -3.0f}, {1.0f, -3.0f}, {1.6f, -3.0f},
     };
-    private int[][] colisoes = new int[][] {
-            {SEM_COLISAO, SEM_COLISAO},
-            {ESQUERDA, SEM_COLISAO},
-            {MEIO, SEM_COLISAO},
-            {DIREITA, SEM_COLISAO},
-            {SEM_COLISAO, SEM_COLISAO},
-            {SEM_COLISAO, ACIMA},
-            {ESQUERDA, ACIMA},
-            {MEIO, ACIMA},
-            {DIREITA, ACIMA},
-            {SEM_COLISAO, ACIMA},
-            {SEM_COLISAO, MEIO},
-            {ESQUERDA, MEIO},
-            {MEIO, MEIO},
-            {DIREITA, MEIO},
-            {SEM_COLISAO, MEIO},
-            {SEM_COLISAO, ABAIXO},
-            {ESQUERDA, ABAIXO},
-            {MEIO, ABAIXO},
-            {DIREITA, ABAIXO},
-            {SEM_COLISAO, ABAIXO},
-            {SEM_COLISAO, SEM_COLISAO},
-            {ESQUERDA, SEM_COLISAO},
-            {MEIO, SEM_COLISAO},
-            {DIREITA, SEM_COLISAO},
-            {SEM_COLISAO, SEM_COLISAO},
+
+    private int[] colisoes = new int[] {
+            SEM_COLISAO, SEM_COLISAO, SEM_COLISAO,
+            ACIMA, ACIMA, ACIMA,
+            ESQUERDA, DIREITA,
+            ESQUERDA, DIREITA,
+            ESQUERDA, DIREITA,
+            ABAIXO, ABAIXO, ABAIXO,
+            SEM_COLISAO, SEM_COLISAO, SEM_COLISAO,
     };
 
     @Test
     public void casosDeColisao() {
         for (int i = 0; i < coordenadas.length; i++) {
+            System.out.println(i);
             bola.x = coordenadas[i][0];
             bola.y = coordenadas[i][1];
-            Colisao c = Colisao.entre(bola, tijolo);
-            assertEquals(c.emX, colisoes[i][0]);
-            assertEquals(c.emY, colisoes[i][1]);
+            Colisao colisao = Colisao.entre(bola, tijolo);
+            assertEquals(colisao.getPosicao(), colisoes[i]);
         }
     }
 
