@@ -6,8 +6,8 @@ import static br.usp.ime.aet.opengl3.Colisao.*;
 
 public class ColisaoTest {
 
-    private Sprite bola = new Sprite(0, 0f, 0f, 0.5f, 0.5f, 0);
-    private Sprite tijolo = new Sprite(1, 0f, 0f, 2.0f, 2.0f, 0);
+    private Sprite bola = new Sprite(0f, 0f, 0.5f, 0.5f, 0);
+    private Sprite tijolo = new Sprite(0f, 0f, 2.0f, 2.0f, 0);
 
     private float[][] coordenadas = new float[][] {
             // em cima, sem tocar

@@ -76,32 +76,4 @@ public class Colisao {
         return colisao;
     }
 
-    /*
-    private static int colisaoEmX(Sprite s1, Sprite s2) {
-        if (s1.x + s1.largura < s2.x) return SEM_COLISAO;
-        if (s2.x + s2.largura < s1.x) return SEM_COLISAO;
-
-        if (s1.x < s2.x) {
-            if (s1.x + s1.largura < s2.x + s2.largura) return ESQUERDA;
-            return MEIO;
-        }
-
-        if (s2.x + s2.largura < s1.x + s1.largura) return DIREITA;
-        return MEIO;
-    }
-
-    private static int colisaoEmY(Sprite s1, Sprite s2) {
-        if (s1.y - s1.altura > s2.y) return SEM_COLISAO;
-        if (s2.y - s2.altura > s1.y) return SEM_COLISAO;
-
-        if (s1.y > s2.y) {
-            if (s1.y - s1.altura > s2.y - s2.altura) return ACIMA;
-            return MEIO;
-        }
-
-        if (s2.y - s2.altura > s1.y - s1.altura) return ABAIXO;
-        return MEIO;
-    }
-    */
-
 }

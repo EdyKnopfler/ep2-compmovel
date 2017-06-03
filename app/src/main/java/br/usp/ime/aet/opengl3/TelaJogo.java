@@ -7,8 +7,8 @@ import android.opengl.Matrix;
 import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import static br.usp.ime.aet.opengl3.Sprite.ALT_BLOCO;
-import static br.usp.ime.aet.opengl3.Sprite.LARG_BLOCO;
+import static br.usp.ime.aet.opengl3.Bloco.ALT_BLOCO;
+import static br.usp.ime.aet.opengl3.Bloco.LARG_BLOCO;
 
 /** Lógica de renderização */
 public class TelaJogo implements GLSurfaceView.Renderer {
@@ -74,6 +74,7 @@ public class TelaJogo implements GLSurfaceView.Renderer {
     }
 
     public void retomar() {
+        // TODO precisa zerar a contagem de tempo
         partida.rolando = true;
     }
 
@@ -83,15 +84,15 @@ public class TelaJogo implements GLSurfaceView.Renderer {
         // Esquerda e direita
         int i = 1;
         for (float y = -1.2f; y <= 1.2f; y += ALT_BLOCO) {
-            parede.add(new Sprite(i, -0.8f, y, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
+            parede.add(new Sprite(-0.8f, y, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
             i++;
-            parede.add(new Sprite(i, 0.6f, y, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
+            parede.add(new Sprite(0.6f, y, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
             i++;
         }
 
         // Em cima
         for (float x = -0.8f; x <= 0.6f; x += LARG_BLOCO) {
-            parede.add(new Sprite(i, x, 1.0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
+            parede.add(new Sprite(x, 1.0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO4));
             i++;
         }
 
@@ -99,19 +100,19 @@ public class TelaJogo implements GLSurfaceView.Renderer {
     }
 
     private void faseAmostra() {
-        ArrayList<Sprite> blocos = new ArrayList<>();
-        blocos.add(new Sprite(1, -0.2f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO1));
-        blocos.add(new Sprite(2, -0.4f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO2));
-        blocos.add(new Sprite(3, -0.6f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO3));
-        blocos.add(new Sprite(4, 0f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO3));
-        blocos.add(new Sprite(5, 0.2f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO2));
-        blocos.add(new Sprite(6, 0.4f, 0f, LARG_BLOCO, ALT_BLOCO, Texturas.TIJOLO1));
+        ArrayList<Bloco> blocos = new ArrayList<>();
+        blocos.add(new Bloco(-0.2f, 0f, 1, Texturas.TIJOLO1));
+        blocos.add(new Bloco(-0.4f, 0f, 1, Texturas.TIJOLO2));
+        blocos.add(new Bloco(-0.6f, 0f, 1, Texturas.TIJOLO3));
+        blocos.add(new Bloco(0f, 0f, 1, Texturas.TIJOLO3));
+        blocos.add(new Bloco(0.2f, 0f, 1, Texturas.TIJOLO2));
+        blocos.add(new Bloco(0.4f, 0f, 1, Texturas.TIJOLO1));
         partida.blocos = blocos;
     }
 
     private void criarSpritesVidas() {
         for (int i = 0; i < Partida.VIDAS_EXTRAS; i++)
-            vidas[i] = new Sprite(-10 + i, -0.55f + i*0.1f, -0.9f, 0.05f, 0.05f, Texturas.BOLA);
+            vidas[i] = new Sprite(-0.55f + i*0.1f, -0.9f, 0.05f, 0.05f, Texturas.BOLA);
     }
 
     private void desenharVidas(float[] ajuste) {

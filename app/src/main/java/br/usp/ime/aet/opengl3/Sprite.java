@@ -10,12 +10,8 @@ import static br.usp.ime.aet.opengl3.Colisao.*;
 /** Lógica de OpenGL: desenhos */
 public class Sprite {
 
-    public static final float LARG_BLOCO = 0.2f;
-    public static final float ALT_BLOCO = 0.1f;
-
     protected static ShortBuffer ordemDesenho;
 
-    private int id;
     public float x, y, largura, altura;
     private int textura;
 
@@ -24,8 +20,7 @@ public class Sprite {
     private ByteBuffer bytes;
     private FloatBuffer coordenadas;
 
-    public Sprite(int id, float x, float y, float largura, float altura, int textura) {
-        this.id = id;
+    public Sprite(float x, float y, float largura, float altura, int textura) {
         this.x = x;
         this.y = y;
         this.largura = largura;
@@ -98,13 +93,5 @@ public class Sprite {
         coordenadas.put(coords);
         coordenadas.position(0);
     }
-
-    /*
-    TODO acho que não precisamos de IDs de sprites (testar)
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Sprite && ((Sprite) obj).id == this.id;
-    }
-    */
 
 }
