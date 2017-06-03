@@ -118,7 +118,7 @@ public class Partida {
     private void novaFase() {
         pausar();
         posicoesIniciais();
-        blocos.clear();
+        blocos = new ArrayList<>();
 
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++) {
@@ -231,7 +231,7 @@ public class Partida {
         for (Sprite bloco : blocosExcluir)
             blocos.remove(bloco);
 
-        blocosExcluir.clear();
+        blocosExcluir = new ArrayList<>();
 
         if (blocos.isEmpty()) {  // Passou de fase :)
             recalcularDificuldade();
