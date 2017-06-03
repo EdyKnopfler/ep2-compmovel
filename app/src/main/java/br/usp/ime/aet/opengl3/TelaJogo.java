@@ -19,10 +19,12 @@ public class TelaJogo implements GLSurfaceView.Renderer {
     private float[] projecao = new float[16];
     private float largura, altura;
     private Sprite[] vidas = new Sprite[Partida.VIDAS_EXTRAS];
+    private Sprite splash;
 
     public TelaJogo(Activity contexto) {
         this.contexto = contexto;
         partida = new Partida();
+        splash = new Sprite(-0.6f, 0.9f, 1.2f, 0.9f, Texturas.SPLASH);
         criarParede();
         faseAmostra();
         criarSpritesVidas();
@@ -34,6 +36,7 @@ public class TelaJogo implements GLSurfaceView.Renderer {
         Matrix.setLookAtM(camera, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
         Programas.inicializar();
         Texturas.carregar(contexto);
+        Sons.carregar(contexto);
     }
 
     @Override
@@ -64,9 +67,8 @@ public class TelaJogo implements GLSurfaceView.Renderer {
 
         desenharVidas(ajuste);
 
-        if (partida.finalizada) {
-            // TODO mostrar um splash
-        }
+        if (partida.finalizada)
+            splash.desenhar(ajuste);
     }
 
     public void pausar() {

@@ -1,5 +1,6 @@
 package br.usp.ime.aet.opengl3;
 
+import android.util.Log;
 import java.util.ArrayList;
 import static br.usp.ime.aet.opengl3.Colisao.*;
 
@@ -13,7 +14,7 @@ public class Partida {
     private static float POS_PAD_X = -0.15f, POS_PAD_Y = -0.8f;
     private static float LARG_PAD = 0.3f, ALT_PAD = 0.05f;
 
-    private static float VEL_BOLA = 0.6f, VEL_PAD = 0.4f;
+    private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
     //private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
 
     public boolean finalizada = true;
@@ -25,6 +26,7 @@ public class Partida {
     public ArrayList<Bloco> blocosExcluir;
     public Sprite bola, pad;
 
+    private double[] probabilidadesTijolos;
     private float velBolaX = 0f, velBolaY = 0f, velPadX = 0f;
     private double tempoAnterior;
 
@@ -40,9 +42,8 @@ public class Partida {
         finalizada = false;
         rolando = true;
         vidas = VIDAS_EXTRAS;
-        posicoesIniciais();
-        criarNovaFase();
-        tempoAnterior = System.currentTimeMillis();
+        probabilidadesTijolos = new double[] {0.2, 0.1, 0.05};
+        novaFase();
     }
 
     public void pausar() {
@@ -75,12 +76,13 @@ public class Partida {
         pad.x = novaPos;
 
         if (bola.y < -0.9f) {
+            Sons.queda();
             vidas--;
 
             if (vidas < 0) {
                 finalizada = true;
                 rolando = false;
-                Mensagens.mostrar("GAME OVER", "TESTE");
+                Mensagens.mostrar("", "GAME OVER");
                 return;
             }
             else
@@ -113,6 +115,30 @@ public class Partida {
         velPadX = 0f;
     }
 
+    private void novaFase() {
+        pausar();
+        posicoesIniciais();
+        blocos.clear();
+
+        for (int i = 0; i < 6; i++)
+            for (int j = 0; j < 10; j++) {
+                double sorteio = Math.random();
+                float x = -0.6f + i*0.2f;
+                float y = 0f + j*0.1f;
+
+                Log.d("X", i + ", " + j + " ==> " + x + "," + y);
+
+                if (sorteio < probabilidadesTijolos[2])
+                    blocos.add(new Bloco(x, y, -1, Texturas.TIJOLO4));
+                else if (sorteio < probabilidadesTijolos[1])
+                    blocos.add(new Bloco(x, y, 3, Texturas.TIJOLO3));
+                else if (sorteio < probabilidadesTijolos[0])
+                    blocos.add(new Bloco(x, y, 2, Texturas.TIJOLO2));
+                else
+                    blocos.add(new Bloco(x, y, 1, Texturas.TIJOLO1));
+            }
+    }
+
     private void posicoesIniciais() {
         bola.x = POS_BOLA_X;
         bola.y = POS_BOLA_Y;
@@ -120,17 +146,6 @@ public class Partida {
         pad.y = POS_PAD_Y;
         velBolaX = 0f;
         velBolaY = -VEL_BOLA;
-    }
-
-    private void criarNovaFase() {
-        // TODO: lógica de criação aleatória de nível
-        blocos = new ArrayList<>();
-        blocos.add(new Bloco(-0.2f, 0f, 3, Texturas.TIJOLO3));
-        blocos.add(new Bloco(-0.4f, 0f, 2, Texturas.TIJOLO2));
-        blocos.add(new Bloco(-0.6f, 0f, 1, Texturas.TIJOLO1));
-        blocos.add(new Bloco(0f, 0f, 1, Texturas.TIJOLO1));
-        blocos.add(new Bloco(0.2f, 0f, 2, Texturas.TIJOLO2));
-        blocos.add(new Bloco(0.4f, 0f, 3, Texturas.TIJOLO3));
     }
 
     private void tratarColisoes() {
@@ -171,6 +186,8 @@ public class Partida {
     }
 
     private void colisaoComPad(Colisao colisao) {
+        Sons.pad();
+
         if (velBolaX == 0f)  // O x começa zerado
             velBolaX = VEL_BOLA;
 
@@ -191,8 +208,9 @@ public class Partida {
         }
     }
 
-
     private void colisaoComTijolo(Colisao colisao) {
+        Sons.quebra();
+
         switch (colisao.getPosicao()) {
             case ACIMA:
                 velBolaY = Math.abs(velBolaY);
@@ -212,7 +230,20 @@ public class Partida {
     private void processarExclusoes() {
         for (Sprite bloco : blocosExcluir)
             blocos.remove(bloco);
+
         blocosExcluir.clear();
+
+        if (blocos.isEmpty()) {  // Passou de fase :)
+            recalcularDificuldade();
+            novaFase();
+        }
+    }
+
+    private void recalcularDificuldade() {
+        if (probabilidadesTijolos[0] > 0.4) return;  // limite de dificuldade
+        for (int i = probabilidadesTijolos.length - 1; i >= 1; i--)
+            probabilidadesTijolos[i] = probabilidadesTijolos[i-1];
+        probabilidadesTijolos[0] += 0.1;
     }
 
 }
