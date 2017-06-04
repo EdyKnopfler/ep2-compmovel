@@ -29,6 +29,7 @@ public class Partida {
     private double[] probabilidadesTijolos;
     private float velBolaX = 0f, velBolaY = 0f, velPadX = 0f;
     private double tempoAnterior;
+    private int indestrutiveis;
 
     public Partida() {
         bola = new Sprite(POS_BOLA_X, POS_BOLA_Y, TAM_BOLA, TAM_BOLA, Texturas.BOLA);
@@ -119,6 +120,7 @@ public class Partida {
         pausar();
         posicoesIniciais();
         blocos = new ArrayList<>();
+        indestrutiveis = 0;
 
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++) {
@@ -126,10 +128,10 @@ public class Partida {
                 float x = -0.6f + i*0.2f;
                 float y = 0f + j*0.1f;
 
-                Log.d("X", i + ", " + j + " ==> " + x + "," + y);
-
-                if (sorteio < probabilidadesTijolos[2])
+                if (sorteio < probabilidadesTijolos[2]) {
                     blocos.add(new Bloco(x, y, -1, Texturas.TIJOLO4));
+                    indestrutiveis++;
+                }
                 else if (sorteio < probabilidadesTijolos[1])
                     blocos.add(new Bloco(x, y, 3, Texturas.TIJOLO3));
                 else if (sorteio < probabilidadesTijolos[0])
@@ -233,7 +235,7 @@ public class Partida {
 
         blocosExcluir = new ArrayList<>();
 
-        if (blocos.isEmpty()) {  // Passou de fase :)
+        if (blocos.size() == indestrutiveis) {  // Passou de fase :)
             recalcularDificuldade();
             novaFase();
         }
