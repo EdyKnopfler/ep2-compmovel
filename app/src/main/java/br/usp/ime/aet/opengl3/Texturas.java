@@ -47,6 +47,7 @@ public class Texturas {
         criarTextura(contexto, 4, R.drawable.tijolo4, GLES20.GL_TEXTURE4);
         criarTextura(contexto, 5, R.drawable.pad, GLES20.GL_TEXTURE5);
         criarTextura(contexto, 6, R.drawable.splash, GLES20.GL_TEXTURE6);
+	
     }
 
     private static void criarTextura(Context contexto, int indice, int id, int identificador) {
