@@ -111,6 +111,7 @@ public class TelaJogo implements GLSurfaceView.Renderer {
         partida.blocos = blocos;
     }
 
+    //Calcula as bolinhas que ainda restam
     private void criarSpritesVidas() {
         for (int i = 0; i < Partida.VIDAS_EXTRAS; i++)
             vidas[i] = new Sprite(-0.55f + i*0.1f, -0.9f, 0.05f, 0.05f, Texturas.BOLA);

@@ -20,6 +20,8 @@ public class ToqueTela extends GLSurfaceView {
         tela = (TelaJogo) renderer;
     }
 
+    //Aqui ele soh pega onde foi clicado na tela
+    //Passa para a partida fazer o processamento
     @Override
     public boolean onTouchEvent(MotionEvent evento) {
         float x = conversaoX(evento.getX(), tela.getLargura());

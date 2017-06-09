@@ -74,6 +74,7 @@ public class Partida {
         bola.x += velBolaX;
         bola.y += velBolaY;
 
+      	//movimento do pad
         float novaPos = pad.x + velPadX * (float) decorrido/1000.0f;
         if (novaPos < -0.6f)  // paredes!
             novaPos = -0.6f;
@@ -81,6 +82,7 @@ public class Partida {
             novaPos = 0.6f - pad.largura;
         pad.x = novaPos;
 
+	//bola passou do pad
         if (bola.y < -0.9f) {
             Sons.queda();
             vidas--;
@@ -121,12 +123,14 @@ public class Partida {
         velPadX = 0f;
     }
 
+    //chamado ao destruir o ultimo bloco
     private void novaFase() {
         pausar();
         posicoesIniciais();
         blocos = new ArrayList<>();
         indestrutiveis = 0;
 
+	//constroi fase aleatoria
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++) {
                 double sorteio = Math.random();
