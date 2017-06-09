@@ -14,8 +14,9 @@ public class Partida {
     private static float POS_PAD_X = -0.15f, POS_PAD_Y = -0.8f;
     private static float LARG_PAD = 0.3f, ALT_PAD = 0.05f;
 
-    private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
-    //private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
+    // TODO voltar
+    //private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
+    private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
 
     public boolean finalizada = true;
     public boolean rolando = false;
@@ -64,10 +65,14 @@ public class Partida {
         double decorrido = agora - tempoAnterior;
         tempoAnterior = agora;
 
-        bola.x += velBolaX * decorrido/1000.0;
-        bola.y += velBolaY * decorrido/1000.0;
-        //bola.x += velBolaX;
-        //bola.y += velBolaY;
+        // TODO ver os tempos no celular e colocar um if (emulador/celular)
+        Log.d("X", "Tempo: " + decorrido);
+
+        // TODO voltar
+        //bola.x += velBolaX * decorrido/1000.0;
+        //bola.y += velBolaY * decorrido/1000.0;
+        bola.x += velBolaX;
+        bola.y += velBolaY;
 
         float novaPos = pad.x + velPadX * (float) decorrido/1000.0f;
         if (novaPos < -0.6f)  // paredes!
