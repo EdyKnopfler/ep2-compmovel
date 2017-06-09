@@ -15,14 +15,15 @@ public class Texturas {
     public static FloatBuffer recorte;
 
     public static int BOLA = 0;
-    public static int TIJOLO1 = 1;
-    public static int TIJOLO2 = 2;
-    public static int TIJOLO3 = 3;
-    public static int TIJOLO4 = 4;
-    public static int PAD = 5;
-    public static int SPLASH = 6;
+    public static int PAD = 1;
+    public static int SPLASH = 2;
+    public static int TIJOLO1 = 3;
+    public static int TIJOLO2 = 4;
+    public static int TIJOLO3 = 5;
+    public static int TIJOLO4 = 6;
+    public static int TIJOLO5 = 7;
 
-    private static int[] nomes = new int[7];
+    private static int[] nomes = new int[8];
 
     public static void carregar(Context contexto) {
         float[] uvs = new float[] {
@@ -41,12 +42,13 @@ public class Texturas {
         GLES20.glGenTextures(nomes.length, nomes, 0);
 
         criarTextura(contexto, 0, R.drawable.bola, GLES20.GL_TEXTURE0);
-        criarTextura(contexto, 1, R.drawable.tijolo1, GLES20.GL_TEXTURE1);
-        criarTextura(contexto, 2, R.drawable.tijolo2, GLES20.GL_TEXTURE2);
-        criarTextura(contexto, 3, R.drawable.tijolo3, GLES20.GL_TEXTURE3);
-        criarTextura(contexto, 4, R.drawable.tijolo4, GLES20.GL_TEXTURE4);
-        criarTextura(contexto, 5, R.drawable.pad, GLES20.GL_TEXTURE5);
-        criarTextura(contexto, 6, R.drawable.splash, GLES20.GL_TEXTURE6);
+        criarTextura(contexto, 1, R.drawable.pad, GLES20.GL_TEXTURE1);
+        criarTextura(contexto, 2, R.drawable.splash, GLES20.GL_TEXTURE2);
+        criarTextura(contexto, 3, R.drawable.tijolo1, GLES20.GL_TEXTURE3);
+        criarTextura(contexto, 4, R.drawable.tijolo2, GLES20.GL_TEXTURE4);
+        criarTextura(contexto, 5, R.drawable.tijolo3, GLES20.GL_TEXTURE5);
+        criarTextura(contexto, 6, R.drawable.tijolo4, GLES20.GL_TEXTURE6);
+        criarTextura(contexto, 7, R.drawable.tijolo5, GLES20.GL_TEXTURE7);
 	
     }
 
