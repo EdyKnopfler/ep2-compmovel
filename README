@@ -1,0 +1,40 @@
+EQUIPE
+
+Angelo Gregório Lovatto           NUSP 9293435
+Éderson Cássio Lacerda Ferreira   NUSP 9297975
+Taiane Coelho Ramos               NUSP 6426955
+
+FUNCIONALIDADES IMPLEMENTADAS
+
+Fácil:
+1 - Blocos Diferentes: 
+    Temos 4 tipos de blocos, sendo eles um que quebra um 1 toque (vermelho), um 
+    que quebra com 2 toques (verde), um que quebra com 3 toques (azul), que um 
+    não é possível de ser quebrado (cinza).
+2 - Sons de Efeito: 
+    O jogo toca som de efeito especial quando a bola toca a pá, 
+    quando toca os blocos e quando perde uma vida.
+
+Médio:
+1 - Gráficos com Textura: 
+    Nossos blocos tem uma textura diferente para cada tipo de bloco. Também a
+    bola e o pad possuem texturas.
+2 - Power-ups: 
+    Temos 2 blocos com efeito especial (rosa e roxo com estrela) e um bloco que 
+    reseta o efeito especial (verde).
+
+Difícil:
+1 - Níveis aleatórios: 
+    Nossos níveis sempre são gerados de forma aleatória conforme um vetor que 
+    determina a probabilidade de frequência de cada bloco (mais fáceis são mais 
+    comuns de aparecer, especiais são mais raros). Conforme o usuário passa de 
+    nível, os blocos mais difíceis de serem quebrados tem mais chance de 
+    aparecer.
+
+Outros:
+* Para jogar:
+  Toque na tela do lado direito ou esquerdo do pad e ele se movimentará nesta 
+  direção.
+* No emulador, o jogo fica bastante lento, com períodos entre quadros da ordem 
+  de centenas de milissegundos. Em um celular, a média é entre 15 e 20
+  milissegundos, produzindo uma animação bastante fluente.

@@ -102,12 +102,12 @@ public class TelaJogo implements GLSurfaceView.Renderer {
 
     private void faseAmostra() {
         ArrayList<Bloco> blocos = new ArrayList<>();
-        blocos.add(new Bloco(-0.2f, 0f, 1, Texturas.TIJOLO1));
-        blocos.add(new Bloco(-0.4f, 0f, 1, Texturas.TIJOLO2));
-        blocos.add(new Bloco(-0.6f, 0f, 1, Texturas.TIJOLO3));
-        blocos.add(new Bloco(0f, 0f, 1, Texturas.TIJOLO3));
-        blocos.add(new Bloco(0.2f, 0f, 1, Texturas.TIJOLO2));
-        blocos.add(new Bloco(0.4f, 0f, 1, Texturas.TIJOLO1));
+        blocos.add(new Bloco(-0.2f, 0f, 1, 0, Texturas.TIJOLO1));
+        blocos.add(new Bloco(-0.4f, 0f, 1, 0, Texturas.TIJOLO2));
+        blocos.add(new Bloco(-0.6f, 0f, 1, 0, Texturas.TIJOLO3));
+        blocos.add(new Bloco(0f, 0f, 1, 0, Texturas.TIJOLO3));
+        blocos.add(new Bloco(0.2f, 0f, 1, 0, Texturas.TIJOLO2));
+        blocos.add(new Bloco(0.4f, 0f, 1, 0, Texturas.TIJOLO1));
         partida.blocos = blocos;
     }
 

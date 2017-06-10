@@ -1,11 +1,15 @@
 package br.usp.ime.aet.opengl3;
 
-import android.util.Log;
 import java.util.ArrayList;
 import static br.usp.ime.aet.opengl3.Colisao.*;
 
 /** Lógica de jogo */
 public class Partida {
+    public static final int PAD_RAPIDO = 1;
+    public static final int BOLA_LENTA = 2;
+    public static final int RESET_EFEITO = 3;
+    public static final float DEFAULT_VEL_PAD = 0.6f;
+    public static final float DEFAULT_VEL_BOLA = 0.5f;
 
     public static int VIDAS_EXTRAS = 3;
 
@@ -13,10 +17,7 @@ public class Partida {
     private static float TAM_BOLA = 0.1f;
     private static float POS_PAD_X = -0.15f, POS_PAD_Y = -0.8f;
     private static float LARG_PAD = 0.3f, ALT_PAD = 0.05f;
-
-    // TODO voltar
-    private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
-    //private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
+    private static float VEL_BOLA = DEFAULT_VEL_BOLA, VEL_PAD = DEFAULT_VEL_PAD;
 
     public boolean finalizada = true;
     public boolean rolando = false;
@@ -44,7 +45,8 @@ public class Partida {
         finalizada = false;
         rolando = true;
         vidas = VIDAS_EXTRAS;
-        probabilidadesTijolos = new double[] {0.2, 0.1, 0.05};
+	    //probabilidade de tijolos: médio, dificil, inquebrável, pad_rapido, bola_lenta
+        probabilidadesTijolos = new double[] {0.4, 0.2, 0.1, 0.08, 0.04};
         novaFase();
     }
 
@@ -65,17 +67,20 @@ public class Partida {
         double decorrido = agora - tempoAnterior;
         tempoAnterior = agora;
 
-        // TODO ver os tempos no celular e colocar um if (emulador/celular)
-        Log.d("X", "Tempo: " + decorrido);
+        float novaPos;  // Movimento do pad
 
-        // TODO voltar
-        bola.x += velBolaX * decorrido/1000.0;
-        bola.y += velBolaY * decorrido/1000.0;
-        //bola.x += velBolaX;
-        //bola.y += velBolaY;
+        if (decorrido < 100.0) {
+            bola.x += velBolaX * decorrido / 1000.0;
+            bola.y += velBolaY * decorrido / 1000.0;
+            novaPos = pad.x + velPadX * (float) decorrido/1000.0f;
+        }
+        else {
+            // rodando no emulador! usando velocidades não baseadas na cronometragem
+            bola.x += velBolaX/10f;
+            bola.y += velBolaY/10f;
+            novaPos = pad.x + velPadX/10f;
+        }
 
-      	//movimento do pad
-        float novaPos = pad.x + velPadX * (float) decorrido/1000.0f;
         if (novaPos < -0.6f)  // paredes!
             novaPos = -0.6f;
         else if (novaPos > 0.6f - pad.largura)
@@ -130,23 +135,35 @@ public class Partida {
         blocos = new ArrayList<>();
         indestrutiveis = 0;
 
-	//constroi fase aleatoria
+        //constroi fase aleatoria
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++) {
                 double sorteio = Math.random();
                 float x = -0.6f + i*0.2f;
                 float y = 0f + j*0.1f;
 
-                if (sorteio < probabilidadesTijolos[2]) {
-                    blocos.add(new Bloco(x, y, -1, Texturas.TIJOLO4));
+                //Tijolo BOLA_LENTA
+                if (sorteio < probabilidadesTijolos[4]) {
+                    blocos.add(new Bloco(x, y, 1, BOLA_LENTA, Texturas.TIJOLO6));
+                }
+                //Tijolo PAD_RAPIDO
+                else if (sorteio < probabilidadesTijolos[3]) {
+                    blocos.add(new Bloco(x, y, 1, PAD_RAPIDO, Texturas.TIJOLO5));
+                }
+                //Tijolo Indestrutivel
+                else if (sorteio < probabilidadesTijolos[2]) {
+                    blocos.add(new Bloco(x, y, -1, 0, Texturas.TIJOLO4));
                     indestrutiveis++;
                 }
+                //Tijolo Difícil
                 else if (sorteio < probabilidadesTijolos[1])
-                    blocos.add(new Bloco(x, y, 3, Texturas.TIJOLO3));
+                    blocos.add(new Bloco(x, y, 3, 0, Texturas.TIJOLO3));
+                    //Tijolo Médio
                 else if (sorteio < probabilidadesTijolos[0])
-                    blocos.add(new Bloco(x, y, 2, Texturas.TIJOLO2));
+                    blocos.add(new Bloco(x, y, 2, RESET_EFEITO, Texturas.TIJOLO2));
+                    //Tijolo Fácil
                 else
-                    blocos.add(new Bloco(x, y, 1, Texturas.TIJOLO1));
+                    blocos.add(new Bloco(x, y, 1, 0, Texturas.TIJOLO1));
             }
     }
 
@@ -155,6 +172,8 @@ public class Partida {
         bola.y = POS_BOLA_Y;
         pad.x = POS_PAD_X;
         pad.y = POS_PAD_Y;
+        VEL_BOLA = DEFAULT_VEL_BOLA;
+        VEL_PAD = DEFAULT_VEL_PAD;
         velBolaX = 0f;
         velBolaY = -VEL_BOLA;
     }
@@ -190,9 +209,29 @@ public class Partida {
             colisaoComTijolo(maiorArea);
 
         if (blocoAtingido != null) {
-            blocoAtingido.tratarColisao();
+            int efeito = blocoAtingido.tratarColisao();
+	        if(efeito != 0) tratarEfeitos(efeito);
             if (blocoAtingido.morreu())
                 blocosExcluir.add(blocoAtingido);
+        }
+    }
+
+    private void tratarEfeitos(int efeito){
+        switch (efeito){
+            case PAD_RAPIDO:
+                VEL_PAD = 1.0f;
+                break;
+            case BOLA_LENTA:
+                VEL_BOLA = 0.3f;
+                if(velBolaX < 0) velBolaX = -VEL_BOLA;
+                else velBolaX = VEL_BOLA;
+                if(velBolaY < 0) velBolaY = -VEL_BOLA;
+                else velBolaY = VEL_BOLA;
+                break;
+            case RESET_EFEITO:
+                VEL_PAD = DEFAULT_VEL_PAD;
+                VEL_BOLA = DEFAULT_VEL_BOLA;
+                break;
         }
     }
 
@@ -200,7 +239,7 @@ public class Partida {
         Sons.pad();
 
         if (velBolaX == 0f)  // O x começa zerado
-            velBolaX = VEL_BOLA;
+            velBolaX = DEFAULT_VEL_BOLA;
 
         switch (colisao.getPosicao()) {
             case ACIMA:
@@ -221,7 +260,6 @@ public class Partida {
 
     private void colisaoComTijolo(Colisao colisao) {
         Sons.quebra();
-
         switch (colisao.getPosicao()) {
             case ACIMA:
                 velBolaY = Math.abs(velBolaY);
