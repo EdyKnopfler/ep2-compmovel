@@ -15,8 +15,8 @@ public class Partida {
     private static float LARG_PAD = 0.3f, ALT_PAD = 0.05f;
 
     // TODO voltar
-    //private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
-    private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
+    private static float VEL_BOLA = 0.7f, VEL_PAD = 0.5f;
+    //private static float VEL_BOLA = 0.05f, VEL_PAD = 0.03f;
 
     public boolean finalizada = true;
     public boolean rolando = false;
@@ -69,10 +69,10 @@ public class Partida {
         Log.d("X", "Tempo: " + decorrido);
 
         // TODO voltar
-        //bola.x += velBolaX * decorrido/1000.0;
-        //bola.y += velBolaY * decorrido/1000.0;
-        bola.x += velBolaX;
-        bola.y += velBolaY;
+        bola.x += velBolaX * decorrido/1000.0;
+        bola.y += velBolaY * decorrido/1000.0;
+        //bola.x += velBolaX;
+        //bola.y += velBolaY;
 
       	//movimento do pad
         float novaPos = pad.x + velPadX * (float) decorrido/1000.0f;
