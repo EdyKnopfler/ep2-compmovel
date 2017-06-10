@@ -47,9 +47,8 @@ public class Partida {
         finalizada = false;
         rolando = true;
         vidas = VIDAS_EXTRAS;
-	//probabilidade de tijolos: médio, dificil, inquebrável, pad_rapido
-        //probabilidadesTijolos = new double[] {0.2, 0.1, 0.05, 0.05};
-        probabilidadesTijolos = new double[] {0.3, 0.2, 0.1, 0.08};
+	    //probabilidade de tijolos: médio, dificil, inquebrável, pad_rapido, bola_lenta
+        probabilidadesTijolos = new double[] {0.4, 0.2, 0.1, 0.08, 0.04};
         novaFase();
     }
 
@@ -131,29 +130,33 @@ public class Partida {
         blocos = new ArrayList<>();
         indestrutiveis = 0;
 
-	//constroi fase aleatoria
+        //constroi fase aleatoria
         for (int i = 0; i < 6; i++)
             for (int j = 0; j < 10; j++) {
                 double sorteio = Math.random();
                 float x = -0.6f + i*0.2f;
                 float y = 0f + j*0.1f;
 
-		//Tijolo PAD_RAPIDO
-		if (sorteio < probabilidadesTijolos[3]) {
+                //Tijolo BOLA_LENTA
+                if (sorteio < probabilidadesTijolos[4]) {
+                    blocos.add(new Bloco(x, y, 1, BOLA_LENTA, Texturas.TIJOLO6));
+                }
+                //Tijolo PAD_RAPIDO
+                else if (sorteio < probabilidadesTijolos[3]) {
                     blocos.add(new Bloco(x, y, 1, PAD_RAPIDO, Texturas.TIJOLO5));
-		}
-		//Tijolo Indestrutivel
-		else if (sorteio < probabilidadesTijolos[2]) {
+                }
+                //Tijolo Indestrutivel
+                else if (sorteio < probabilidadesTijolos[2]) {
                     blocos.add(new Bloco(x, y, -1, 0, Texturas.TIJOLO4));
                     indestrutiveis++;
                 }
-            //Tijolo Difícil
-	    	else if (sorteio < probabilidadesTijolos[1])
-			blocos.add(new Bloco(x, y, 3, 0, Texturas.TIJOLO3));
-                //Tijolo Médio
+                //Tijolo Difícil
+                else if (sorteio < probabilidadesTijolos[1])
+                    blocos.add(new Bloco(x, y, 3, 0, Texturas.TIJOLO3));
+                    //Tijolo Médio
                 else if (sorteio < probabilidadesTijolos[0])
                     blocos.add(new Bloco(x, y, 2, RESET_EFEITO, Texturas.TIJOLO2));
-                //Tijolo Fácil
+                    //Tijolo Fácil
                 else
                     blocos.add(new Bloco(x, y, 1, 0, Texturas.TIJOLO1));
             }
@@ -164,6 +167,8 @@ public class Partida {
         bola.y = POS_BOLA_Y;
         pad.x = POS_PAD_X;
         pad.y = POS_PAD_Y;
+        VEL_BOLA = DEFAULT_VEL_BOLA;
+        VEL_PAD = DEFAULT_VEL_PAD;
         velBolaX = 0f;
         velBolaY = -VEL_BOLA;
     }
@@ -214,11 +219,16 @@ public class Partida {
                 VEL_PAD = 1.0f;
                 break;
             case BOLA_LENTA:
-                VEL_BOLA = 0.5f;
+                VEL_BOLA = 0.3f;
+                if(velBolaX < 0) velBolaX = -VEL_BOLA;
+                else velBolaX = VEL_BOLA;
+                if(velBolaY < 0) velBolaY = -VEL_BOLA;
+                else velBolaY = VEL_BOLA;
                 break;
             case RESET_EFEITO:
                 VEL_PAD = DEFAULT_VEL_PAD;
                 VEL_BOLA = DEFAULT_VEL_BOLA;
+                break;
         }
     }
 
@@ -226,7 +236,7 @@ public class Partida {
         Sons.pad();
 
         if (velBolaX == 0f)  // O x começa zerado
-            velBolaX = VEL_BOLA;
+            velBolaX = DEFAULT_VEL_BOLA;
 
         switch (colisao.getPosicao()) {
             case ACIMA:
@@ -247,7 +257,6 @@ public class Partida {
 
     private void colisaoComTijolo(Colisao colisao) {
         Sons.quebra();
-
         switch (colisao.getPosicao()) {
             case ACIMA:
                 velBolaY = Math.abs(velBolaY);
